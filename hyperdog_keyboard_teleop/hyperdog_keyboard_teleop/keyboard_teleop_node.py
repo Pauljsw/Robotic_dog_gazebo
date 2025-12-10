@@ -48,7 +48,7 @@ class KeyboardTeleopNode(Node):
         self.cmd.pose = Pose()
         self.cmd.pose.position.x = 0.0
         self.cmd.pose.position.y = 0.0
-        self.cmd.pose.position.z = 120.0  # 초기 높이 (시작 전에는 변경되지 않음)
+        self.cmd.pose.position.z = 80.0  # cmd_manager default 높이와 동일 (hyperdog_variables.py:35)
         self.cmd.pose.orientation.x = 0.0
         self.cmd.pose.orientation.y = 0.0
         self.cmd.pose.orientation.z = 0.0
@@ -147,9 +147,9 @@ class KeyboardTeleopNode(Node):
         if key == '\n':
             if self.can_toggle('start'):
                 self.cmd.states[0] = not self.cmd.states[0]
-                # 로봇 시작 시 안전한 초기 높이 설정
+                # 로봇 시작 시 안전한 초기 높이 설정 (singularity 회피)
                 if self.cmd.states[0]:
-                    self.cmd.pose.position.z = 120.0  # 안전한 초기 높이
+                    self.cmd.pose.position.z = 150.0  # 최소 130mm 필요, 여유있게 150mm
                     self.cmd.gait_step.z = 30.0
                 status = "시작" if self.cmd.states[0] else "정지"
                 self.get_logger().info(f'로봇 {status}')
