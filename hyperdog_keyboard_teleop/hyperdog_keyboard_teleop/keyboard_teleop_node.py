@@ -55,7 +55,7 @@ class KeyboardTeleopNode(Node):
         self.cmd.gait_step = Vector3()
         self.cmd.gait_step.x = 0.0
         self.cmd.gait_step.y = 0.0
-        self.cmd.gait_step.z = 0.0
+        self.cmd.gait_step.z = 30.0  # 초기 스텝 높이 설정 (발을 들어올릴 높이)
         
         # 현재 눌린 키 추적
         self.current_move_key = None
@@ -100,7 +100,14 @@ class KeyboardTeleopNode(Node):
         
     def publish_command(self):
         """주기적으로 명령 퍼블리시 - 조이스틱처럼 동작"""
-        
+
+        # 조이스틱처럼 걷기 모드 중 높이 체크 (조이스틱 코드 131-134번 라인 참조)
+        if self.cmd.states[0] and self.cmd.states[1]:  # 시작 + 걷기 모드
+            if self.cmd.pose.position.z < 100:
+                self.cmd.pose.position.z = 100.0
+            if self.cmd.gait_step.z < 10:
+                self.cmd.gait_step.z = 30.0
+
         # 이동 값 초기화 (조이스틱 중립 상태)
         self.cmd.gait_step.x = 0.0
         self.cmd.gait_step.y = 0.0
