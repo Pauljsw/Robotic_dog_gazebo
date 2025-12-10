@@ -48,7 +48,7 @@ class KeyboardTeleopNode(Node):
         self.cmd.pose = Pose()
         self.cmd.pose.position.x = 0.0
         self.cmd.pose.position.y = 0.0
-        self.cmd.pose.position.z = MIN_HEIGHT
+        self.cmd.pose.position.z = 180.0  # 초기 높이를 180mm로 설정 (singularity 회피)
         self.cmd.pose.orientation.x = 0.0
         self.cmd.pose.orientation.y = 0.0
         self.cmd.pose.orientation.z = 0.0
