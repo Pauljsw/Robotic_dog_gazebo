@@ -48,7 +48,7 @@ class KeyboardTeleopNode(Node):
         self.cmd.pose = Pose()
         self.cmd.pose.position.x = 0.0
         self.cmd.pose.position.y = 0.0
-        self.cmd.pose.position.z = 180.0  # 초기 높이를 180mm로 설정 (singularity 회피)
+        self.cmd.pose.position.z = 120.0  # 초기 높이 (시작 전에는 변경되지 않음)
         self.cmd.pose.orientation.x = 0.0
         self.cmd.pose.orientation.y = 0.0
         self.cmd.pose.orientation.z = 0.0
@@ -101,12 +101,14 @@ class KeyboardTeleopNode(Node):
     def publish_command(self):
         """주기적으로 명령 퍼블리시 - 조이스틱처럼 동작"""
 
-        # 조이스틱처럼 걷기 모드 중 높이 체크 (조이스틱 코드 131-134번 라인 참조)
-        if self.cmd.states[0] and self.cmd.states[1]:  # 시작 + 걷기 모드
-            if self.cmd.pose.position.z < 100:
-                self.cmd.pose.position.z = 100.0
-            if self.cmd.gait_step.z < 10:
-                self.cmd.gait_step.z = 30.0
+        # 조이스틱처럼 로봇이 시작된 후에만 높이 조절 (조이스틱 코드 82-183번 라인 참조)
+        if self.cmd.states[0]:  # 로봇이 시작된 상태
+            # 걷기 모드일 때 최소 높이 보장
+            if self.cmd.states[1]:  # 걷기 모드
+                if self.cmd.pose.position.z < 100:
+                    self.cmd.pose.position.z = 100.0
+                if self.cmd.gait_step.z < 10:
+                    self.cmd.gait_step.z = 30.0
 
         # 이동 값 초기화 (조이스틱 중립 상태)
         self.cmd.gait_step.x = 0.0
@@ -145,6 +147,10 @@ class KeyboardTeleopNode(Node):
         if key == '\n':
             if self.can_toggle('start'):
                 self.cmd.states[0] = not self.cmd.states[0]
+                # 로봇 시작 시 안전한 초기 높이 설정
+                if self.cmd.states[0]:
+                    self.cmd.pose.position.z = 120.0  # 안전한 초기 높이
+                    self.cmd.gait_step.z = 30.0
                 status = "시작" if self.cmd.states[0] else "정지"
                 self.get_logger().info(f'로봇 {status}')
                 return True
