@@ -50,16 +50,16 @@
     </xacro:macro>
 
     <xacro:macro name="gz_foot">
-        <mu1>0.9</mu1>
-        <mu2>0.9</mu2>
+        <mu1>2.0</mu1>  <!-- Increased friction for better traction -->
+        <mu2>2.0</mu2>
         <fdir1>1 1 0</fdir1>
         <kp value="2147483647.0" />
-        <kd value="100.0" />
+        <kd value="1000.0" />  <!-- Increased damping for stable contact -->
         <maxVel>0.01</maxVel>
         <self_collide>1</self_collide>
-        <minDepth>0.001</minDepth> 
+        <minDepth>0.001</minDepth>
 
-        <restitution_coefficient>1</restitution_coefficient>
+        <restitution_coefficient>0.0</restitution_coefficient>  <!-- No bouncing! -->
         <threshold>0</threshold>
 
         <material>Gazebo/DarkGrey</material>
