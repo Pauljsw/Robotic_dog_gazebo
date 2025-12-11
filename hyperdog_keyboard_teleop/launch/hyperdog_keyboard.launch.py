@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # __________________________________________________________________________________
-# HyperDog Keyboard Teleop Launch File
+# HyperDog Keyboard Backend Launch File
 #
-# Launches all necessary nodes for keyboard control:
-# - keyboard_teleop_node (keyboard input)
+# Launches backend nodes for keyboard control:
 # - cmd_manager_node (command processing)
 # - IK_node (inverse kinematics)
+#
+# NOTE: keyboard_teleop MUST be run separately in a terminal with keyboard input!
 # __________________________________________________________________________________
 
 from launch import LaunchDescription
@@ -15,20 +16,20 @@ from launch.event_handlers import OnProcessStart
 
 def generate_launch_description():
     """
-    Launch file for HyperDog keyboard teleoperation.
+    Launch file for HyperDog keyboard teleoperation backend.
 
     Usage:
         Terminal 1: ros2 launch hyperdog_gazebo_sim hyperdog_gazebo_sim.launch.py
         Terminal 2: ros2 launch hyperdog_keyboard_teleop hyperdog_keyboard.launch.py
+        Terminal 3: ros2 run hyperdog_keyboard_teleop keyboard_teleop
+
+    Why 3 terminals?
+    - keyboard_teleop requires direct keyboard input (stdin)
+    - Launch files run processes in background without terminal access
+    - Therefore, keyboard_teleop must run in a foreground terminal
     """
 
-    # Keyboard teleop node (replaces joy_node + hyperdog_teleop_joy_node)
-    node_keyboard_teleop = ExecuteProcess(
-        cmd=['ros2', 'run', 'hyperdog_keyboard_teleop', 'keyboard_teleop'],
-        output='screen'
-    )
-
-    # Command manager node (receives keyboard commands)
+    # Command manager node (receives keyboard commands via topic)
     node_cmd_manager = ExecuteProcess(
         cmd=['ros2', 'run', 'hyperdog_ctrl', 'cmd_manager_node'],
         output='screen'
@@ -41,19 +42,20 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        # Start keyboard_teleop first
-        node_keyboard_teleop,
+        # Print usage instructions
+        LogInfo(msg=''),
+        LogInfo(msg='================================================'),
+        LogInfo(msg='HyperDog Keyboard Control - Backend Nodes'),
+        LogInfo(msg='================================================'),
+        LogInfo(msg='Starting cmd_manager and IK_node...'),
+        LogInfo(msg=''),
+        LogInfo(msg='IMPORTANT: Run keyboard_teleop in another terminal:'),
+        LogInfo(msg='  ros2 run hyperdog_keyboard_teleop keyboard_teleop'),
+        LogInfo(msg='================================================'),
+        LogInfo(msg=''),
 
-        # When keyboard_teleop starts, launch cmd_manager
-        RegisterEventHandler(
-            OnProcessStart(
-                target_action=node_keyboard_teleop,
-                on_start=[
-                    LogInfo(msg='Keyboard teleop started, starting cmd_manager'),
-                    node_cmd_manager,
-                ]
-            )
-        ),
+        # Start cmd_manager first
+        node_cmd_manager,
 
         # When cmd_manager starts, launch IK_node
         RegisterEventHandler(
