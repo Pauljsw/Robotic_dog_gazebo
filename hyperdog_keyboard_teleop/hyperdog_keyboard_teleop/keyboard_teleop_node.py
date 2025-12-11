@@ -44,7 +44,7 @@ class KeyboardTeleopNode(Node):
         # 제어 명령 초기화
         self.cmd = JoyCtrlCmds()
         self.cmd.states = [False, False, False]
-        self.cmd.gait_type = 0
+        self.cmd.gait_type = 1  # 1=trot (일반 걷기), 0=give_hand (특수 포즈)
         self.cmd.pose = Pose()
         self.cmd.pose.position.x = 0.0
         self.cmd.pose.position.y = 0.0
@@ -91,8 +91,13 @@ class KeyboardTeleopNode(Node):
         F        : 몸체 높이 -5
         T        : 발 높이 +5
         G        : 발 높이 -5
-        
-        1-4      : 보행 패턴
+
+        보행 패턴:
+        1        : Give Hand (특수 포즈)
+        2        : Trot (기본 걷기) ← 추천
+        3        : Wave (한 발씩)
+        4        : Trot Fast (빠른 걷기)
+
         ESC      : 종료
         =====================================
         """
