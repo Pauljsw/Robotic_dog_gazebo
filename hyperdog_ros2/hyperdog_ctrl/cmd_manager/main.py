@@ -40,10 +40,14 @@ cmd = Cmds()
 # leg.foot_zero_pnt[:,2] = body.height  = cmd.body.height
 cmd.gait.cycle_time = 0.8
 cmd.gait.swing_time = 0.2
-cmd.leg.foot_zero_pnt[0,0] = -10
-cmd.leg.foot_zero_pnt[1,0] = -10
-cmd.leg.foot_zero_pnt[2,0] = -70
-cmd.leg.foot_zero_pnt[3,0] = -70
+
+# Foot zero points (body-relative coordinates, mm)
+# Robot body: 300mm length, centered at origin
+# Front legs should be at +X (forward), back legs at -X (backward)
+cmd.leg.foot_zero_pnt[0,0] = 70   # FR (Front Right) - forward from center
+cmd.leg.foot_zero_pnt[1,0] = 70   # FL (Front Left) - forward from center
+cmd.leg.foot_zero_pnt[2,0] = -70  # BR (Back Right) - backward from center
+cmd.leg.foot_zero_pnt[3,0] = -70  # BL (Back Left) - backward from center
 cmd.gait.stance_step_h = 0
 
 cmd_manager = CmdManager_ROS(set_msgs=cmd, send_msgs=[leg, body])
