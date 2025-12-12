@@ -44,22 +44,23 @@
       <uri>model://sun</uri>
     </include>
 
-    <!-- Physics settings for better stability -->
+    <!-- Physics settings optimized for quadruped locomotion -->
+    <!-- Known issue: gazebo-ros2-control may cause sliding (see README) -->
     <physics type="ode">
       <max_step_size>0.001</max_step_size>
       <real_time_factor>1.0</real_time_factor>
       <real_time_update_rate>1000</real_time_update_rate>
       <ode>
         <solver>
-          <type>quick</type>
-          <iters>50</iters>
-          <sor>1.3</sor>
+          <type>world</type>  <!-- Changed from 'quick' to 'world' for accuracy -->
+          <iters>100</iters>  <!-- Increased from 50 for better contact resolution -->
+          <sor>1.4</sor>      <!-- Increased from 1.3 for faster convergence -->
         </solver>
         <constraints>
           <cfm>0.0</cfm>
-          <erp>0.2</erp>
-          <contact_max_correcting_vel>100.0</contact_max_correcting_vel>
-          <contact_surface_layer>0.001</contact_surface_layer>
+          <erp>0.5</erp>      <!-- Increased from 0.2 for better constraint enforcement -->
+          <contact_max_correcting_vel>10.0</contact_max_correcting_vel>  <!-- Reduced from 100 -->
+          <contact_surface_layer>0.0001</contact_surface_layer>  <!-- Reduced for tighter contact -->
         </constraints>
       </ode>
     </physics>
