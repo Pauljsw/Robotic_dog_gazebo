@@ -42,10 +42,10 @@ cmd.gait.cycle_time = 0.8
 cmd.gait.swing_time = 0.2
 
 # Foot zero points (body-relative coordinates, mm)
-# Robot body: 300mm length, centered at origin
-# Front legs should be at +X (forward), back legs at -X (backward)
-cmd.leg.foot_zero_pnt[0,0] = 70   # FR (Front Right) - forward from center
-cmd.leg.foot_zero_pnt[1,0] = 70   # FL (Front Left) - forward from center
+# Robot body: 300mm length, Hip joints at X=±175mm from URDF
+# Using conservative values to avoid sudden jumps at startup
+cmd.leg.foot_zero_pnt[0,0] = 10   # FR (Front Right) - slightly forward (was -10, avoiding 70 jump)
+cmd.leg.foot_zero_pnt[1,0] = 10   # FL (Front Left) - slightly forward (was -10, avoiding 70 jump)
 cmd.leg.foot_zero_pnt[2,0] = -70  # BR (Back Right) - backward from center
 cmd.leg.foot_zero_pnt[3,0] = -70  # BL (Back Left) - backward from center
 cmd.gait.stance_step_h = 0
