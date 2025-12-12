@@ -27,6 +27,11 @@ SLANT_Y_MAX = 100.0
 MAX_STEP_LENGTH_X = 250.0
 MAX_STEP_LENGTH_Y = 150.0
 
+# 키보드용 적절한 이동 속도 (조이스틱 50% 정도)
+KEYBOARD_STEP_X = 100.0      # 전진/후진: 250mm의 40%
+KEYBOARD_STEP_Y = 60.0       # 좌우 이동: 150mm의 40%
+KEYBOARD_YAW = 20.0          # 회전: 50°의 40%
+
 # 토글 지연 (초)
 BTN_TOGGLE_DELAY = 0.3
 
@@ -120,19 +125,19 @@ class KeyboardTeleopNode(Node):
         self.cmd.gait_step.y = 0.0
         self.cmd.pose.orientation.z = 0.0
         
-        # 현재 눌린 키에 따라 값 설정
+        # 현재 눌린 키에 따라 값 설정 (조이스틱 50% 정도의 안전한 값 사용)
         if self.current_move_key == 'w':
-            self.cmd.gait_step.x = MAX_STEP_LENGTH_X
+            self.cmd.gait_step.x = KEYBOARD_STEP_X
         elif self.current_move_key == 's':
-            self.cmd.gait_step.x = -MAX_STEP_LENGTH_X
+            self.cmd.gait_step.x = -KEYBOARD_STEP_X
         elif self.current_move_key == 'a':
-            self.cmd.pose.orientation.z = YAW_RANGE
+            self.cmd.pose.orientation.z = KEYBOARD_YAW
         elif self.current_move_key == 'd':
-            self.cmd.pose.orientation.z = -YAW_RANGE
+            self.cmd.pose.orientation.z = -KEYBOARD_YAW
         elif self.current_move_key == 'q':
-            self.cmd.gait_step.y = MAX_STEP_LENGTH_Y
+            self.cmd.gait_step.y = KEYBOARD_STEP_Y
         elif self.current_move_key == 'e':
-            self.cmd.gait_step.y = -MAX_STEP_LENGTH_Y
+            self.cmd.gait_step.y = -KEYBOARD_STEP_Y
         
         # 퍼블리시
         self.publisher.publish(self.cmd)
