@@ -48,7 +48,7 @@ pkg_gazebo_ros = FindPackageShare(package='gazebo_ros').find('gazebo_ros')
 pkg_hyperdog_gazebo = FindPackageShare(package='hyperdog_gazebo_sim').find('hyperdog_gazebo_sim')
 
 # Set the path to the world file
-world_file_name = 'contact.world'
+world_file_name = 'high_friction.world'  # Changed from contact.world for better traction
 world_path = os.path.join(pkg_hyperdog_gazebo, 'worlds', world_file_name)
 # world_path = os.path.join(pkg_hyperdog_gazebo, 'worlds', 'contact.world')
 
